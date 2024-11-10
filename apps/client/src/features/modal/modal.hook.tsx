@@ -17,22 +17,7 @@ export const useModal = (children: ReactNode) => {
     if (!isOpen) return null;
     return createPortal(
       <ModalContext.Provider value={contextValue}>
-        <Background onClick={closeModal}>
-          <div
-            role='button'
-            tabIndex={0}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.stopPropagation();
-              }
-            }}
-          >
-            {children}
-          </div>
-        </Background>
+        <Background>{children}</Background>
       </ModalContext.Provider>,
       document.body,
     );
