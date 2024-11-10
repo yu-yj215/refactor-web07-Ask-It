@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Query, UseInterceptors } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 import { CreateUserDto } from './dto/create-user.dto';
@@ -6,8 +6,10 @@ import { ValidateUserDto } from './dto/validate-user.dto';
 import { CheckDuplicationSwagger } from './swagger/check-duplication.swagger';
 import { CreateUserSwagger } from './swagger/create-user.swagger';
 import { UsersService } from './users.service';
+import { TransformInterceptor } from '../common/interceptors/transform.interceptor';
 
 @ApiTags('Users')
+@UseInterceptors(TransformInterceptor)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -19,10 +21,7 @@ export class UsersController {
   @ApiBody({ type: CreateUserDto })
   async create(@Body() createUserDto: CreateUserDto) {
     await this.usersService.create(createUserDto);
-    return {
-      type: 'success',
-      data: {},
-    };
+    return {};
   }
 
   @Get()
@@ -40,11 +39,6 @@ export class UsersController {
       throw new BadRequestException('이메일 또는 닉네임 하나만 요청해 주세요.');
     }
 
-    return {
-      type: 'success',
-      data: {
-        exists: await this.usersService.exist(validateUserDto),
-      },
-    };
+    return { exists: await this.usersService.exist(validateUserDto) };
   }
 }

@@ -1,11 +1,13 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UseInterceptors } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 import { CreateSessionDto } from './dto/create-session.dto';
 import { SessionsService } from './sessions.service';
 import { CreateSessionSwagger } from './swagger/create-session.swagger';
+import { TransformInterceptor } from '../common/interceptors/transform.interceptor';
 
 @ApiTags('Sessions')
+@UseInterceptors(TransformInterceptor)
 @Controller('sessions')
 export class SessionsController {
   constructor(private readonly sessionsService: SessionsService) {}
@@ -17,11 +19,6 @@ export class SessionsController {
   @ApiBody({ type: CreateSessionDto })
   async create(@Body() createSessionDto: CreateSessionDto) {
     const sessionData = await this.sessionsService.create(createSessionDto);
-    return {
-      type: 'success',
-      data: {
-        sessionId: sessionData.sessionId,
-      },
-    };
+    return { sessionId: sessionData.sessionId };
   }
 }
