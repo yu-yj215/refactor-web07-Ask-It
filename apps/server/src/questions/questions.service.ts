@@ -140,4 +140,15 @@ export class QuestionsService {
     }
     return await this.questionRepository.updateClosed(question_id, closed);
   }
+
+  async toggleLike(questionId: number, createUserToken: string) {
+    const exist = await this.questionRepository.findLike(questionId, createUserToken);
+    if (exist) await this.questionRepository.deleteLike(exist.question_like_id);
+    else await this.questionRepository.createLike(questionId, createUserToken);
+    return { liked: !exist };
+  }
+
+  async getLikesCount(questionId: number) {
+    return this.questionRepository.getLikesCount(questionId);
+  }
 }
