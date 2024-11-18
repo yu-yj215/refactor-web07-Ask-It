@@ -24,6 +24,7 @@ export class SessionsService {
     const createdSession = await this.sessionRepository.create(sessionCreateData);
     return { sessionId: createdSession.session_id };
   }
+
   async getSessionsById(userId: number) {
     const sessionData = await this.sessionRepository.getSessionsById(userId);
 
@@ -32,7 +33,7 @@ export class SessionsService {
       const formattedCreatedAt = {
         year: createdDate.getFullYear(),
         month: createdDate.getMonth() + 1,
-        dat: createdDate.getDate(),
+        date: createdDate.getDate(),
       };
 
       return {
@@ -43,5 +44,9 @@ export class SessionsService {
       };
     });
     return transformedSessions;
+  }
+
+  async checkSessionHost(sessionId: string, userId: number) {
+    return !!(await this.sessionRepository.findBySessionIdAndUser(sessionId, userId));
   }
 }

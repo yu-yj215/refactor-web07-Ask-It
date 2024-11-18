@@ -6,9 +6,10 @@ import { RepliesService } from './replies.service';
 import { PrismaModule } from '../prisma/prisma.module';
 
 import { SessionTokenModule } from '@src/common/guards/session-token.module';
+import { SessionsModule } from '@src/sessions/sessions.module';
 
 @Module({
-  imports: [PrismaModule, SessionTokenModule],
+  imports: [PrismaModule, SessionTokenModule, SessionsModule],
   controllers: [RepliesController],
   providers: [RepliesService, RepliesRepository],
 })
