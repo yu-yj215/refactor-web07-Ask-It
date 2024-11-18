@@ -88,4 +88,13 @@ export class SessionsAuthRepository {
     if (record === null) return await this.findTokenByUserId(user_id, session_id);
     return record?.token || null;
   }
+  async findByIdAndSession(reply_id: number, session_id: string) {
+    try {
+      return await this.prisma.reply.findUnique({
+        where: { reply_id: reply_id, session_id: session_id },
+      });
+    } catch (error) {
+      throw DatabaseException.read('reply');
+    }
+  }
 }

@@ -8,7 +8,7 @@ import { DatabaseException, ResourceNotFoundException } from '@common/exceptions
 import { PrismaService } from '@prisma-alias/prisma.service';
 
 @Injectable()
-export class QuestionRepository {
+export class QuestionsRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   async findById(question_id: number) {

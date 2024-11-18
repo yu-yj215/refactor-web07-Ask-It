@@ -3,7 +3,7 @@ import { Question } from '@prisma/client';
 
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { GetQuestionDto } from './dto/get-question.dto';
-import { QuestionRepository } from './questions.repository';
+import { QuestionsRepository } from './questions.repository';
 
 import {
   UpdateQuestionBodyDto,
@@ -16,7 +16,7 @@ import { SessionsAuthRepository } from '@sessions-auth/sessions-auth.repository'
 @Injectable()
 export class QuestionsService {
   constructor(
-    private readonly questionRepository: QuestionRepository,
+    private readonly questionRepository: QuestionsRepository,
     private readonly sessionRepository: SessionRepository,
     private readonly sessionAuthRepository: SessionsAuthRepository,
   ) {}

@@ -20,15 +20,12 @@ export class RepliesService {
     return await this.repliesRepository.create(data);
   }
 
-  async update(data: UpdateReplyDto) {
-    //사용자 자격 검증 로직
-
-    this.repliesRepository.update(data);
+  async updateReply(data: UpdateReplyDto) {
+    this.repliesRepository.updateReply(data);
   }
 
-  async delete(data: DeleteReplyDto) {
-    //사용자 자격 검증 로직
-    this.repliesRepository.delete(data);
+  async deleteReply(data: DeleteReplyDto) {
+    this.repliesRepository.deleteReply(data);
   }
 
   async validateHost(sessionId: string, createUserToken: string) {
