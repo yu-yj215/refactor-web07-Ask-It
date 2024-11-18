@@ -34,8 +34,7 @@ export class QuestionsRepository {
     }
   }
 
-  async create(data: CreateQuestionDto) {
-    const { sessionId, token: createUserToken, body } = data;
+  async create({ sessionId, token: createUserToken, body }: CreateQuestionDto) {
     const questionData = {
       createUserToken,
       sessionId,

@@ -46,6 +46,7 @@ export class QuestionsController {
 
   @Get()
   @GetQuestionSwagger()
+  @UseGuards(SessionTokenValidationGuard)
   async getQuestionsBySession(@Query() getQuestionDto: GetQuestionDto) {
     const [questions, isHost] = await this.questionsService.getQuestionsBySession(getQuestionDto);
     return { questions, isHost };

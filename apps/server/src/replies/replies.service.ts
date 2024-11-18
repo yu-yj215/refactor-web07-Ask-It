@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Reply } from '@prisma/client';
 
 import { CreateReplyDto } from './dto/create-reply.dto';
-import { DeleteReplyDto } from './dto/delete-reply.dto';
 import { UpdateReplyBodyDto } from './dto/update-reply.dto';
 import { RepliesRepository } from './replies.repository';
 

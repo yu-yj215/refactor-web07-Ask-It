@@ -1,20 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
-import { PrismaService } from '../prisma/prisma.service';
 import { CreateReplyDto } from './dto/create-reply.dto';
-import { DeleteReplyDto } from './dto/delete-reply.dto';
-import { UpdateReplyBodyDto } from './dto/update-reply.dto';
 
 import { DatabaseException, ResourceNotFoundException } from '@common/exceptions/resource.exception';
 import { PRISMA_ERROR_CODE } from '@prisma-alias/prisma.error';
+import { PrismaService } from '@prisma-alias/prisma.service';
 
 @Injectable()
 export class RepliesRepository {
   constructor(private readonly prisma: PrismaService) {}
 
-  async createReply(data: CreateReplyDto) {
-    const { questionId, token: createUserToken, sessionId, body } = data;
+  async createReply({ questionId, token: createUserToken, sessionId, body }: CreateReplyDto) {
     const replyData = {
       questionId,
       createUserToken,
