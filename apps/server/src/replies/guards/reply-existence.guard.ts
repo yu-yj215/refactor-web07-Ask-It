@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable, NotFoundException } from '@nestjs/common';
 
-import { RepliesRepository } from '../replies.repository';
+import { RepliesRepository } from '@replies/replies.repository';
 
 @Injectable()
 export class ReplyExistenceGuard implements CanActivate {

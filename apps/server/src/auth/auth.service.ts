@@ -3,9 +3,10 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuid4 } from 'uuid';
 
-import { UsersRepository } from '../users/users.repository';
 import { LoginDto } from './dto/login.dto';
 import { InvalidCredentialsException, RefreshTokenException } from './exceptions/auth.exception';
+
+import { UsersRepository } from '@users/users.repository';
 
 interface RefreshTokenData {
   userId: number;
