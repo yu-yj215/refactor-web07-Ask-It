@@ -21,21 +21,20 @@ export function useSignInForm() {
   const handleLogin = async () => {
     try {
       const response = await login({ email, password });
-
-      if (response.type === 'success') {
-        setAccessToken(response.data.accessToken);
-      }
+      setAccessToken(response.accessToken);
+      window.location.reload();
     } catch (e) {
-      if (isAxiosError(e) && e.response && 'error' in e.response.data) {
+      console.log(e);
+      if (isAxiosError(e) && e.response) {
         if (e.response.status === 400) {
           setLoginFailed({
             status: 'INVALID',
-            message: e.response.data.error.messages.shift(),
+            message: e.response.data.messages.shift(),
           });
         } else if (e.response.status === 401) {
           setLoginFailed({
             status: 'INVALID',
-            message: e.response.data.error.message,
+            message: e.response.data.message,
           });
         }
       }
