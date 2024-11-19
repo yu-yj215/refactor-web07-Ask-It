@@ -64,6 +64,7 @@ export class QuestionsRepository {
     try {
       return await this.prisma.question.findMany({
         where: { sessionId },
+        orderBy: { questionId: 'asc' },
         include: {
           questionLikes: {
             select: {
@@ -78,6 +79,7 @@ export class QuestionsRepository {
             },
           },
           replies: {
+            orderBy: { replyId: 'asc' },
             include: {
               createUserTokenEntity: {
                 select: {
