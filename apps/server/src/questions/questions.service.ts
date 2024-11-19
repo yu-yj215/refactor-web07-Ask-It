@@ -89,12 +89,13 @@ export class QuestionsService {
         };
 
         const replyInfo = replies.map((reply) => {
-          const { replyId, createUserToken, body, createdAt, createUserTokenEntity, replyLikes } = reply;
+          const { replyId, createUserToken, body, createdAt, createUserTokenEntity, replyLikes, deleted } = reply;
 
           return {
             replyId,
             body,
             createdAt,
+            deleted,
             ...mapLikesAndOwnership({ createUserToken, likes: replyLikes, createUserTokenEntity }, token),
           };
         });

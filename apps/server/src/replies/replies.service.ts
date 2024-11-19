@@ -16,7 +16,7 @@ export class RepliesService {
   ) {}
 
   async createReply(data: CreateReplyDto) {
-    const { replyId, body, createdAt, createUserTokenEntity } = await this.repliesRepository.createReply(data);
+    const { replyId, body, createdAt, createUserTokenEntity, deleted } = await this.repliesRepository.createReply(data);
     return {
       replyId,
       body,
@@ -24,6 +24,7 @@ export class RepliesService {
       isOwner: true,
       likesCount: 0,
       liked: false,
+      deleted,
       nickname: createUserTokenEntity?.user?.nickname || '익명',
     };
   }

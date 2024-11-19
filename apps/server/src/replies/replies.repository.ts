@@ -49,10 +49,9 @@ export class RepliesRepository {
 
   async deleteReply(replyId: number) {
     try {
-      return await this.prisma.reply.delete({
-        where: {
-          replyId,
-        },
+      return await this.prisma.reply.update({
+        where: { replyId },
+        data: { deleted: true },
       });
     } catch (error) {
       throw DatabaseException.delete('reply');
@@ -69,7 +68,7 @@ export class RepliesRepository {
   async findReplyByIdAndSessionId(replyId: number, sessionId: string) {
     try {
       return await this.prisma.reply.findFirst({
-        where: { replyId, sessionId },
+        where: { replyId, sessionId, deleted: false },
       });
     } catch (error) {
       throw DatabaseException.read('reply');
