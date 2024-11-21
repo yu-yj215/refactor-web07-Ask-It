@@ -49,9 +49,10 @@ function ChattingList() {
         <div className='shrink grow basis-0 text-lg font-medium text-black'>
           실시간 채팅
         </div>
-        <div className='flex items-center justify-center gap-2.5 rounded bg-green-100 px-2 py-1'>
+        {/* TODO: 백엔드 추가 되면 진행 */}
+        {/* <div className='flex items-center justify-center gap-2.5 rounded bg-green-100 px-2 py-1'>
           <p className='text-[10px] font-medium text-green-800'>123명 참여중</p>
-        </div>
+        </div> */}
       </div>
 
       <div
