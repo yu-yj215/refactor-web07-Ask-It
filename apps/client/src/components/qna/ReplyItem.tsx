@@ -1,3 +1,6 @@
+import { useMutation } from '@tanstack/react-query';
+import { throttle } from 'es-toolkit';
+import { useCallback } from 'react';
 import { FiEdit2 } from 'react-icons/fi';
 import { GrClose, GrLike, GrLikeFill, GrValidate } from 'react-icons/gr';
 import Markdown from 'react-markdown';
@@ -28,43 +31,87 @@ function ReplyItem({ question, reply }: ReplyItemProps) {
     <CreateReplyModal question={question} reply={reply} />,
   );
 
-  const handleDelete = () => {
-    if (expired || !sessionId || !sessionToken) return;
-
-    deleteReply(reply.replyId, {
-      sessionId,
-      token: sessionToken,
-    }).then(() => {
-      addToast({
-        type: 'SUCCESS',
-        message: '답변이 성공적으로 삭제되었습니다.',
-        duration: 3000,
-      });
-      updateReply(question.questionId, {
-        ...reply,
-        deleted: true,
-      });
+  const { mutate: postReplyLikeQuery, isPending: isLikeInProgress } =
+    useMutation({
+      mutationFn: (params: {
+        replyId: number;
+        sessionId: string;
+        token: string;
+      }) =>
+        postReplyLike(params.replyId, {
+          sessionId: params.sessionId,
+          token: params.token,
+        }),
+      onSuccess: (res) => {
+        addToast({
+          type: 'SUCCESS',
+          message: reply.liked
+            ? '좋아요를 취소했습니다.'
+            : '답변에 좋아요를 눌렀습니다.',
+          duration: 3000,
+        });
+        updateReply(question.questionId, {
+          ...reply,
+          ...res,
+        });
+      },
     });
-  };
 
-  const handleToggleLike = () => {
-    if (expired || !sessionId || !sessionToken || reply.deleted) return;
+  const handleLike = useCallback(
+    throttle(
+      () => {
+        if (
+          expired ||
+          !sessionId ||
+          !sessionToken ||
+          isLikeInProgress ||
+          reply.deleted
+        )
+          return;
 
-    postReplyLike(reply.replyId, {
+        postReplyLikeQuery({
+          replyId: reply.replyId,
+          sessionId,
+          token: sessionToken,
+        });
+      },
+      1000,
+      { edges: ['leading'] },
+    ),
+    [],
+  );
+
+  const { mutate: deleteReplyQuery, isPending: isDeleteInProgress } =
+    useMutation({
+      mutationFn: (params: {
+        replyId: number;
+        sessionId: string;
+        token: string;
+      }) =>
+        deleteReply(params.replyId, {
+          sessionId: params.sessionId,
+          token: params.token,
+        }),
+      onSuccess: () => {
+        addToast({
+          type: 'SUCCESS',
+          message: '답변이 성공적으로 삭제되었습니다.',
+          duration: 3000,
+        });
+        updateReply(question.questionId, {
+          ...reply,
+          deleted: true,
+        });
+      },
+    });
+
+  const handleDelete = () => {
+    if (expired || !sessionId || !sessionToken || isDeleteInProgress) return;
+
+    deleteReplyQuery({
+      replyId: reply.replyId,
       sessionId,
       token: sessionToken,
-    }).then((res) => {
-      addToast({
-        type: 'SUCCESS',
-        message: reply.liked
-          ? '좋아요를 취소했습니다.'
-          : '답변에 좋아요를 눌렀습니다.',
-        duration: 3000,
-      });
-      updateReply(question.questionId, {
-        ...reply,
-        ...res,
-      });
     });
   };
 
@@ -86,7 +133,7 @@ function ReplyItem({ question, reply }: ReplyItemProps) {
           <div className='inline-flex w-full items-center justify-between'>
             <Button
               className='hover:bg-gray-200/50 hover:transition-all'
-              onClick={handleToggleLike}
+              onClick={handleLike}
             >
               <div className='flex flex-row items-center gap-2 text-sm font-medium text-gray-500'>
                 {reply.liked ? (

@@ -1,3 +1,4 @@
+import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 
@@ -18,12 +19,9 @@ function CreateSessionModal() {
 
   const navigate = useNavigate();
 
-  const enableCreateSession =
-    sessionName.trim().length >= 3 && sessionName.trim().length <= 20;
-
-  const handleCreateSession = () =>
-    enableCreateSession &&
-    postSession({ title: sessionName }).then((res) => {
+  const { mutate: postSessionQuery, isPending } = useMutation({
+    mutationFn: postSession,
+    onSuccess: (res) => {
       closeModal();
       addToast({
         type: 'SUCCESS',
@@ -34,7 +32,16 @@ function CreateSessionModal() {
         to: '/session/$sessionId',
         params: { sessionId: res.sessionId },
       });
-    });
+    },
+  });
+
+  const enableCreateSession =
+    sessionName.trim().length >= 3 && sessionName.trim().length <= 20;
+
+  const handleCreateSession = () => {
+    if (!enableCreateSession || isPending) return;
+    postSessionQuery({ title: sessionName });
+  };
 
   return (
     <Modal>
