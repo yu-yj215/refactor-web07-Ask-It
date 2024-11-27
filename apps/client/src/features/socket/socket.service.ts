@@ -1,4 +1,5 @@
 import { io, Socket } from 'socket.io-client';
+import { z } from 'zod';
 
 import { useAuthStore } from '@/features/auth';
 import { useSessionStore } from '@/features/session';
@@ -152,6 +153,18 @@ export class SocketService {
   }
 
   sendChatMessage(message: string) {
+    const chatMessageSchema = z.string().min(1);
+
+    const result = chatMessageSchema.safeParse(message);
+    if (!result.success) {
+      useToastStore.getState().addToast({
+        type: 'ERROR',
+        message: '메시지를 입력해주세요',
+        duration: 3000,
+      });
+      return;
+    }
+
     this.socket.emit('createChat', message);
   }
 
