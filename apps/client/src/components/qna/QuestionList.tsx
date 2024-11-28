@@ -6,6 +6,7 @@ import { IoClose, IoShareSocialOutline } from 'react-icons/io5';
 
 import { useModal } from '@/features/modal';
 import { postSessionTerminate, useSessionStore } from '@/features/session';
+import { useSocket } from '@/features/socket';
 import { useToastStore } from '@/features/toast';
 
 import {
@@ -29,6 +30,8 @@ function QuestionList() {
     setSelectedQuestionId,
   } = useSessionStore();
 
+  const socket = useSocket();
+
   const { addToast } = useToastStore();
 
   const { Modal: CreateQuestion, openModal: openCreateQuestionModal } =
@@ -48,6 +51,7 @@ function QuestionList() {
           postSessionTerminate({ sessionId, token: sessionToken })
             .then((response) => {
               if (response.expired) {
+                socket?.disconnect();
                 setExpired(true);
                 addToast({
                   type: 'SUCCESS',
