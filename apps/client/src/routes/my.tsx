@@ -14,7 +14,8 @@ export const Route = createFileRoute('/my')({
         .then((res) => {
           setAuthInformation(res);
         })
-        .catch(() => {
+        .catch((error) => {
+          console.error(error);
           throw redirect({ to: '/' });
         });
     }

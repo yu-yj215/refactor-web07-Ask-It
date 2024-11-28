@@ -40,6 +40,7 @@ function CreateQuestionModal({ question }: CreateQuestionModalProps) {
         });
         closeModal();
       },
+      onError: console.error,
     });
 
   const { mutate: patchQuestionBodyQuery, isPending: isPatchInProgress } =
@@ -64,6 +65,7 @@ function CreateQuestionModal({ question }: CreateQuestionModalProps) {
         });
         closeModal();
       },
+      onError: console.error,
     });
 
   const submitDisabled =

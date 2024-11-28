@@ -57,6 +57,7 @@ function ReplyItem({ question, reply }: ReplyItemProps) {
           ...res,
         });
       },
+      onError: console.error,
     });
 
   const handleLike = useCallback(
@@ -105,6 +106,7 @@ function ReplyItem({ question, reply }: ReplyItemProps) {
           deleted: true,
         });
       },
+      onError: console.error,
     });
 
   const handleDelete = () => {

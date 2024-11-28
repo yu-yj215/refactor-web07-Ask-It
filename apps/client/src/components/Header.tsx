@@ -22,15 +22,17 @@ function Header() {
   const navigate = useNavigate();
 
   const handleLogout = () =>
-    logout().then(() => {
-      clearAccessToken();
-      navigate({ to: '/' });
-      addToast({
-        type: 'SUCCESS',
-        message: '로그아웃 되었습니다.',
-        duration: 3000,
-      });
-    });
+    logout()
+      .then(() => {
+        clearAccessToken();
+        navigate({ to: '/' });
+        addToast({
+          type: 'SUCCESS',
+          message: '로그아웃 되었습니다.',
+          duration: 3000,
+        });
+      })
+      .catch(console.error);
 
   return (
     <>

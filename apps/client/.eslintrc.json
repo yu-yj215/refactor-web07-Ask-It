@@ -27,6 +27,7 @@
       },
       "plugins": ["react-hooks", "react-refresh"],
       "rules": {
+        "no-console": ["error", { "allow": ["warn", "error"] }],
         "@typescript-eslint/no-throw-literal": "off",
         "react/react-in-jsx-scope": "off",
         "react/require-default-props": "off",

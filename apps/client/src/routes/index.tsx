@@ -9,9 +9,11 @@ export const Route = createFileRoute('/')({
     const { isLogin, setAuthInformation } = useAuthStore.getState();
 
     if (!isLogin())
-      refresh().then((res) => {
-        setAuthInformation(res);
-      });
+      refresh()
+        .then((res) => {
+          setAuthInformation(res);
+        })
+        .catch(console.error);
   },
   component: HomePage,
 });

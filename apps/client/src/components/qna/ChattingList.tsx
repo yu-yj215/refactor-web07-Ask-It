@@ -82,6 +82,7 @@ function ChattingList() {
               container.scrollTop = heightDiff;
             });
           })
+          .catch(console.error)
           .finally(() => {
             setIsLoading(false);
           });

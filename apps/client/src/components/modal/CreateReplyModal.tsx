@@ -47,6 +47,7 @@ function CreateReplyModal({ question, reply }: CreateReplyModalProps) {
         closeModal();
       }
     },
+    onError: console.error,
   });
 
   const { mutate: patchReplyBodyQuery, isPending: isPatchInProgress } =
@@ -73,6 +74,7 @@ function CreateReplyModal({ question, reply }: CreateReplyModalProps) {
           closeModal();
         }
       },
+      onError: console.error,
     });
 
   const submitDisabled =

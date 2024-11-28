@@ -84,9 +84,11 @@ function SessionParticipantsModal() {
 
   useEffect(() => {
     if (sessionId && sessionToken)
-      getSessionUsers({ sessionId, token: sessionToken }).then(({ users }) => {
-        setSessionUsers(users);
-      });
+      getSessionUsers({ sessionId, token: sessionToken })
+        .then(({ users }) => {
+          setSessionUsers(users);
+        })
+        .catch(console.error);
   }, [sessionId, sessionToken, setSessionUsers]);
 
   const users = sessionUsers.filter(({ nickname }) =>

@@ -18,6 +18,8 @@ declare module '@tanstack/react-router' {
   }
 }
 
+if (import.meta.env.MODE !== 'development') console.error = () => {};
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>

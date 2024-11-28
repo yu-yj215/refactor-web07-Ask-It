@@ -79,6 +79,7 @@ function QuestionItem({ question, onQuestionSelect }: QuestionItemProps) {
           ...res,
         });
       },
+      onError: console.error,
     });
 
   const handleLike = useCallback(
@@ -124,6 +125,7 @@ function QuestionItem({ question, onQuestionSelect }: QuestionItemProps) {
           closed: !question.closed,
         });
       },
+      onError: console.error,
     });
 
   const handleClose = () => {
@@ -163,6 +165,7 @@ function QuestionItem({ question, onQuestionSelect }: QuestionItemProps) {
         pinned: !question.pinned,
       });
     },
+    onError: console.error,
   });
 
   const handlePin = () => {
@@ -196,6 +199,7 @@ function QuestionItem({ question, onQuestionSelect }: QuestionItemProps) {
         });
         removeQuestion(question.questionId);
       },
+      onError: console.error,
     });
 
   const handleDelete = () => {

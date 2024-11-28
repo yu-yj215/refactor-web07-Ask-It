@@ -35,7 +35,7 @@ export const Route = createFileRoute('/session/$sessionId/$questionId/')({
         setAuthInformation(res);
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
 
     reset();
@@ -64,6 +64,7 @@ export const Route = createFileRoute('/session/$sessionId/$questionId/')({
       const { chats } = await getChattingList(token, sessionId);
       chats.reverse().forEach(addChatting);
     } catch (e) {
+      console.error(e);
       if (isRedirect(e)) throw e;
       throw redirect({ to: '/' });
     }

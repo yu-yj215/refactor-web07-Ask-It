@@ -33,6 +33,7 @@ function CreateSessionModal() {
         params: { sessionId: res.sessionId },
       });
     },
+    onError: console.error,
   });
 
   const enableCreateSession =
