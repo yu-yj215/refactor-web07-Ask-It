@@ -1,12 +1,21 @@
+import { AnimatePresence, motion } from 'motion/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { useSessionStore } from '@/features/session';
+import { getChattingList } from '@/features/session/chatting';
 import { useSocket } from '@/features/socket';
 
 import ChattingMessage from '@/components/qna/ChattingMessage';
 
 function ChattingList() {
-  const { expired, chatting, participantCount } = useSessionStore();
+  const {
+    expired,
+    chatting,
+    participantCount,
+    sessionId,
+    sessionToken,
+    addChattingToFront,
+  } = useSessionStore();
 
   const [message, setMessage] = useState('');
   const [isBottom, setIsBottom] = useState(true);
@@ -15,7 +24,11 @@ function ChattingList() {
 
   const socket = useSocket();
 
+  const hasMoreRef = useRef(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const prevHeightRef = useRef(0);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const checkScrollPosition = useCallback(() => {
     if (messagesEndRef.current) {
@@ -42,6 +55,38 @@ function ChattingList() {
 
   useEffect(() => {
     const handleScroll = () => {
+      const container = messagesEndRef.current;
+      if (!container) return;
+
+      if (container.scrollTop === 0) {
+        if (
+          !sessionId ||
+          !sessionToken ||
+          !chatting[0]?.chattingId ||
+          !hasMoreRef.current ||
+          isLoading
+        )
+          return;
+
+        prevHeightRef.current = container.scrollHeight;
+
+        setIsLoading(true);
+        getChattingList(sessionToken, sessionId, chatting[0]?.chattingId)
+          .then(({ chats }) => {
+            if (chats.length < 20) hasMoreRef.current = false;
+            chats.forEach(addChattingToFront);
+
+            requestAnimationFrame(() => {
+              const newHeight = container.scrollHeight;
+              const heightDiff = newHeight - prevHeightRef.current;
+              container.scrollTop = heightDiff;
+            });
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
+      }
+
       userScrolling.current = true;
       checkScrollPosition();
     };
@@ -52,7 +97,7 @@ function ChattingList() {
     return () => {
       messageContainer?.removeEventListener('scroll', handleScroll);
     };
-  }, [autoScrolling, checkScrollPosition]);
+  }, [checkScrollPosition, chatting]);
 
   useEffect(() => {
     if (isBottom && !userScrolling.current) {
@@ -79,6 +124,19 @@ function ChattingList() {
         className='inline-flex h-full w-full flex-col items-start justify-start overflow-y-auto overflow-x-hidden break-words p-2.5'
         ref={messagesEndRef}
       >
+        <AnimatePresence>
+          {isLoading && (
+            <motion.div
+              className='flex w-full justify-center py-2'
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.1 }}
+            >
+              <div className='h-5 w-5 animate-spin rounded-full border-2 border-gray-300 border-t-blue-500' />
+            </motion.div>
+          )}
+        </AnimatePresence>
         {chatting.map((chat) => (
           <ChattingMessage key={chat.chattingId} chat={chat} />
         ))}
