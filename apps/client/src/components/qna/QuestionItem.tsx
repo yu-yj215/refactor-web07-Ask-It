@@ -223,7 +223,7 @@ function QuestionItem({ question, onQuestionSelect }: QuestionItemProps) {
               {question.body}
             </Markdown>
             <div className='flex flex-col gap-2'>
-              {(isHost || (!isHost && question.closed)) && (
+              {!expired && (isHost || (!isHost && question.closed)) && (
                 <Button
                   onClick={handleClose}
                   className={`self-start transition-colors duration-200 ${
@@ -246,7 +246,7 @@ function QuestionItem({ question, onQuestionSelect }: QuestionItemProps) {
         </div>
         <div className='inline-flex w-full justify-between'>
           <div className='inline-flex items-center justify-start gap-2'>
-            {isHost && (
+            {!expired && isHost && (
               <Button
                 className='hover:bg-gray-200/50 hover:transition-all'
                 onClick={handlePin}
