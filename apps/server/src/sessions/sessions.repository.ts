@@ -45,6 +45,9 @@ export class SessionsRepository {
           expiredAt: true,
           createdAt: true,
         },
+        orderBy: {
+          createdAt: 'desc',
+        },
       });
       return sessions;
     } catch (error) {
