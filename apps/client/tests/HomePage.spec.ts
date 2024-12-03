@@ -7,9 +7,7 @@ test.beforeEach(async ({ page }) => {
 test('헤더와 설명 텍스트가 올바르게 표시되는지 확인', async ({ page }) => {
   await expect(page.getByText('질문과 답변을 넘어,')).toBeVisible();
   await expect(page.getByText('함께 만드는 인사이트')).toBeVisible();
-  await expect(
-    page.getByText('실시간 Q&A와 소통을 위한 최적의 플랫폼'),
-  ).toBeVisible();
+  await expect(page.getByText('실시간 Q&A와 소통을 위한 최적의 플랫폼')).toBeVisible();
 });
 
 test('기능 카드들이 모두 표시되는지 확인', async ({ page }) => {
@@ -25,9 +23,7 @@ test('기능 카드들이 모두 표시되는지 확인', async ({ page }) => {
 
   await Promise.all(
     features.map(async (feature) => {
-      await expect(
-        page.locator(`text=${feature.title} >> .. >> text=${feature.desc}`),
-      ).toBeVisible();
+      await expect(page.locator(`text=${feature.title} >> .. >> text=${feature.desc}`)).toBeVisible();
     }),
   );
 });
@@ -67,10 +63,7 @@ test('회원가입 플로우 전체 테스트', async ({ page }) => {
   await page.fill('input[placeholder="닉네임을 입력해주세요"]', 'testUser');
   await page.waitForResponse('**/api/users/nicknames/**');
 
-  await page.fill(
-    'input[placeholder="비밀번호를 입력해주세요"]',
-    'Password123!',
-  );
+  await page.fill('input[placeholder="비밀번호를 입력해주세요"]', 'Password123!');
 
   await expect(signUpButton).toBeEnabled();
 
@@ -81,9 +74,7 @@ test('회원가입 플로우 전체 테스트', async ({ page }) => {
   await expect(page.locator('text=회원가입 되었습니다.')).toBeVisible();
 });
 
-test('회원 가입이 이미 중복된 이메일이 있어서 실패하는 경우', async ({
-  page,
-}) => {
+test('회원 가입이 이미 중복된 이메일이 있어서 실패하는 경우', async ({ page }) => {
   await page.click('text=회원가입');
 
   const signUpButton = page.locator('text=회원 가입');
@@ -97,19 +88,14 @@ test('회원 가입이 이미 중복된 이메일이 있어서 실패하는 경�
     });
   });
 
-  await page.fill(
-    'input[placeholder="example@gmail.com"]',
-    'duplicate@example.com',
-  );
+  await page.fill('input[placeholder="example@gmail.com"]', 'duplicate@example.com');
   await page.waitForResponse('**/api/users/emails/**');
 
   await expect(page.locator('text=이미 사용 중인 이메일입니다.')).toBeVisible();
   await expect(signUpButton).toBeDisabled();
 });
 
-test('회원 가입이 이미 중복된 닉네임이 있어서 실패하는 경우', async ({
-  page,
-}) => {
+test('회원 가입이 이미 중복된 닉네임이 있어서 실패하는 경우', async ({ page }) => {
   await page.click('text=회원가입');
 
   const signUpButton = page.locator('text=회원 가입');
@@ -131,10 +117,7 @@ test('회원 가입이 이미 중복된 닉네임이 있어서 실패하는 경�
     });
   });
 
-  await page.fill(
-    'input[placeholder="example@gmail.com"]',
-    'duplicate@example.com',
-  );
+  await page.fill('input[placeholder="example@gmail.com"]', 'duplicate@example.com');
   await page.waitForResponse('**/api/users/emails/**');
   await expect(page.locator('text=사용 가능한 이메일입니다.')).toBeVisible();
 
@@ -148,13 +131,10 @@ test('회원 가입이 이미 중복된 닉네임이 있어서 실패하는 경�
 test('로그인 / 로그아웃 플로우 전체 테스트', async ({ page }) => {
   await page.click('text=로그인');
 
-  const loginButton = page.locator('text=로그인').nth(1);
+  const loginButton = page.getByRole('button', { name: '로그인' }).nth(1);
 
   await page.fill('input[placeholder="example@gmail.com"]', 'test@example.com');
-  await page.fill(
-    'input[placeholder="비밀번호를 입력해주세요"]',
-    'Password123!',
-  );
+  await page.fill('input[placeholder="비밀번호를 입력해주세요"]', 'Password123!');
 
   await expect(loginButton).toBeEnabled();
 
@@ -162,7 +142,7 @@ test('로그인 / 로그아웃 플로우 전체 테스트', async ({ page }) => 
     route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify({ accessToken: 'fake-jwt-token' }),
+      body: JSON.stringify({ accessToken: 'fake-jwt-token', userId: 1 }),
     });
   });
 
