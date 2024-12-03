@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { SocketController } from './socket.controller';
 import { SocketGateway } from './socket.gateway';
 
 import { ChatsModule } from '@chats/chats.module';
@@ -12,5 +13,6 @@ import { PrismaModule } from '@prisma-alias/prisma.module';
   imports: [PrismaModule, ChatsModule, SessionTokenModule, LoggerModule],
   providers: [SocketGateway, SessionTokenValidationGuard],
   exports: [SocketGateway],
+  controllers: [SocketController],
 })
 export class SocketModule {}
