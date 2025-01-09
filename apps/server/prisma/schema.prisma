@@ -32,11 +32,32 @@ model Session {
   chattings         Chatting[]         @relation("SessionChattings")
 }
 
+model Role {
+  name         String   @id
+  permissions  RolePermission[]
+  tokens       UserSessionToken[] @relation("RoleTokens")
+}
+
+model Permission {
+  permissionId  Int     @id @default(autoincrement()) @map("permission_id")
+  description   String  @unique
+  roles         RolePermission[]
+}
+
+model RolePermission {
+  role        Role       @relation(fields: [roleName], references: [name])
+  roleName    String     
+  permission  Permission @relation(fields: [permissionId], references: [permissionId])
+  permissionId Int       @map("permission_id")
+
+  @@id([roleName, permissionId])
+}
+
 model UserSessionToken {
   token     String  @id @default(uuid())
   userId    Int?    @map("user_id")
   sessionId String  @map("session_id")
-  isHost    Boolean @default(false) @map("is_host")
+  roleType  String  @map("role_type")
 
   user          User?          @relation("UserTokens", fields: [userId], references: [userId])
   session       Session        @relation("SessionTokens", fields: [sessionId], references: [sessionId])
@@ -45,6 +66,7 @@ model UserSessionToken {
   replies       Reply[]        @relation("TokenReplies")
   replyLikes    ReplyLike[]    @relation("TokenReplyLikes")
   chattings     Chatting[]     @relation("TokenChattings")
+  role          Role           @relation("RoleTokens", fields: [roleType], references: [name])
 }
 
 model Question {
