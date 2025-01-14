@@ -39,17 +39,18 @@ jobs:
             - name: Compare HEAD with HEAD^
               id: diff
               run: |
-                  # HEAD~1 과 동일
-                  # HEAD가 최소 2개 이상의 커밋이 있는지 확인
-                  if git cat-file -e HEAD^; then
-                    echo "Comparing HEAD^ with HEAD"
-                    git diff --name-only HEAD^ HEAD > changed_files.txt
-                    echo "CHANGED_FILES=$(cat changed_files.txt)" >> $GITHUB_ENV
-                    cat changed_files.txt
-                  else
-                    echo "HEAD^ does not exist (probably only one commit)."
-                    echo "CHANGED_FILES=" >> $GITHUB_ENV
-                  fi
+                if git cat-file -e HEAD^; then
+                  echo "Comparing HEAD^ with HEAD"
+                  git diff --name-only HEAD^ HEAD > changed_files.txt
+                  # 줄바꿈을 공백으로 치환
+                  CHANGED_FILES=$(tr '\n' ' ' < changed_files.txt)
+                  # 한 줄로 된 문자열만 GITHUB_ENV에 저장 가능
+                  echo "CHANGED_FILES=$CHANGED_FILES" >> $GITHUB_ENV
+                  cat changed_files.txt
+                else
+                  echo "HEAD^ does not exist (probably only one commit)."
+                  echo "CHANGED_FILES=" >> $GITHUB_ENV
+                fi
             
 
             # 4. 클라이언트 배포
