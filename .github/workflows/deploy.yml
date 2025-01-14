@@ -23,7 +23,8 @@ jobs:
             # 2. Repository Checkout
             - name: Checkout repository
               uses: actions/checkout@v2
-              fetch-depth: 0
+              with:
+                  fetch-depth: 0 # 전체 커밋 내역을 가져옵니다.
 
             # 3. 변경 파일 확인
             - name: Determine Changed Files
