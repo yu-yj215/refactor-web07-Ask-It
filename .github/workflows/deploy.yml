@@ -23,12 +23,14 @@ jobs:
             # 2. Repository Checkout
             - name: Checkout repository
               uses: actions/checkout@v2
+              with:
+                fetch-depth: 0 # 전체 히스토리 가져오기
 
-            # 3. 변경 파일 확인
-            - name: Determine Changed Files
-              id: changes
+            - name: Fetch previous commit
               run: |
-                git fetch origin main
+                git fetch origin main --unshallow
+                echo "Before SHA: ${{ github.event.before }}"
+                echo "Current SHA: ${{ github.sha }}"
                 git diff --name-only ${{ github.event.before }} ${{ github.sha }} > changed_files.txt
                 echo "CHANGED_FILES=$(cat changed_files.txt)" >> $GITHUB_ENV
                 cat changed_files.txt
