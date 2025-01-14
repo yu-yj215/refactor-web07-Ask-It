@@ -23,13 +23,14 @@ jobs:
             # 2. Repository Checkout
             - name: Checkout repository
               uses: actions/checkout@v2
+              fetch-depth: 0
 
             # 3. 변경 파일 확인
             - name: Determine Changed Files
               id: changes
               run: |
                   git fetch origin main
-                  git diff --name-only HEAD^ HEAD > changed_files.txt
+                  git diff --name-only FETCH_HEAD HEAD > changed_files.txt
                   echo "CHANGED_FILES=$(cat changed_files.txt)" >> $GITHUB_ENV
                   cat changed_files.txt
 
